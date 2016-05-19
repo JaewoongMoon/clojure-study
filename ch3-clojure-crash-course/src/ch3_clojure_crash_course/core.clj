@@ -314,7 +314,8 @@ failed-protagonist-names
 (map (fn [name] (str "Hi, " name))
      ["Darth Vader" "Mr. Magoo"])
 
-; Anonymous functions
+; ****************************************************************
+; **************  ANONYMOUS FUNCTIONS ***************************
 ((fn [x] (* x 3)) 8)
 
 (def my-special-multiplier (fn [x] (* x 3)))
@@ -322,30 +323,46 @@ failed-protagonist-names
 (my-special-multiplier 12)
 
 ; Another way of creating anonymous function ; So wired! huh?
-#(* % 3)
 
 (#(* % 3) 8)
 ; -> 24
 
-; example ofr passing an anonymous function as ar argument to map 
-; % : reader macro , indicates the argument passed to the function 
+; Here's an example of passing an anonymous function as an argument to map: 
+
 (map #(str "Hi, " %)
      ["Darth Vader" "Mr. Magoo"])
 ; -> ("Hi, Darth Vader" "Hi, Mr. Magoo")
 
+; This strange-looking style of writing anonymous functions is made possible by a feature called READER MACROS. You'll learn all about those in Chapter 7.
+; Right now, it's okay to learn how to use just these anonymous functions. 
+; You can see that this syntax is definitedly more compact, but it's also a little odd. Let's break it down. This kind of anonymous function looks a lot like a function call, except that it's preceded by a hash mark, #:
+
+;; Function call
+(* 8 3)
+
+;; Anonymous funciton 
+#(* % 3)
+
+; This similarity allows you to more quickly see what will happen when this anonymous function is applied. "Oh," you can say to yourself, "this is going to multiply its argument by three."
+; As you may have guessed by now, the percent sign,%, indicates the argument passed to the function. If your anonymous function takes multiple arguments, you can distinguish them like this: %1, %2, %3, and so on. % is equivalent to %1 :
+
 (#(str %1 " and " %2) "cornbread" "butter beans")
 ; -> cornbread and butter beans
 
-; pass rest parameter by using %&
-; and identity returns the argument it's given without altering it.
-; Rest arguments are stored as lists, so the function application return a list of all the arguments.
+; You can also pass a rest parameter with %& : 
 (#(identity %&) 1 "blarg" :yip)
 ; -> (1 "blarg" :yip)
 
+; In this case, you applied the identity function to the rest argument. Identity returns the argument it's given without altering it. Rest arguments are stored as lists, so the function application return a list of all the arguments.
+; If you need to write a simple anonymous function, using this style is best because it's visually compact. On the other hand, it can easily become unreadable if you're writing a longer, more complex function. If that's the case, use fn. 
 
 
+
+;*************************************************************************
 ;; RETURNING FUNCTIONS
-; Closure 
+
+; By now you've seen that functions can return other functions. The returned functions are closures, which means that they can access all the variables that were in scope when the function was created. Here's a standard example :
+ 
 (defn inc-maker
   "Create a custom incrementor"
   [inc-by]
@@ -355,10 +372,13 @@ failed-protagonist-names
 (def inc3 (inc-maker 3))
 
 (inc3 7)
+; => 10 
 
-(inc3 2) 
+; Here, inc-by is in scope, so the returned function as access to it even when the returned function is used outside inc-maker. 
 
 
+
+; ******************************************************************
 ; PULLING IT ALL TOGETHER
 ;; THE SHIRE's NEXT TOP MODEL 
 (def asym-hobbit-body-part [{:name "head" :size 3}

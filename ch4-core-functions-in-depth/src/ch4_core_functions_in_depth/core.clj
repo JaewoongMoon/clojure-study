@@ -5,7 +5,10 @@
 ; Chapter 4. CORE FUNCTIONS IN DEPTH
 
 ;; PROGRAMMING TO ABSTRACTIONS    
-
+;; -> sequence and collection abstractiions.
+; To understand programming to abstractions, let's compare Clojure to a language that wasn't built with that principle in mind : Emacs Lisp(elisp). In elisp, you can use the mapcar function to derive a new list, which is similar to how you use map in Clojure. However, if you want to map over a hash map (similar to Clojure's map data structure) in elisp, you'll need to use the maphash function, whereas in Clojure you can still just use map. In other words, elisp uses two different, data structure-specific functions to implement the map operation, but Clojure uses only one. You can also call reduce on a map in Clojure, whereas elisp doesn't provide a function for reducing a hash map. 
+; The reason is that Clojure defines map and reduce functions in terms of the sequence abstraciton, not in terms of specific data structures. 
+; Lists, vectors, sets, and maps all implement the sequence abstraction, so they all work with amp, as shown here,
 
 (defn titleize
   [topic]
@@ -14,16 +17,16 @@
 (titleize "Potter")
 ; -> Pooter for the Brave and True
 
-; for vector
+; for vectors
 (map titleize ["Hamsters" "Ragnarok"])
 
-; for list 
+; for lists
 (map titleize '("Emphaty" "Decorating"))
 
-; for (unsorted) set
+; for (unsorted) sets
 (map titleize #{"Elbows" "Soap Carving"})
 
-; for anonymous function 
+; for anonymous functions 
 (map #(titleize (second %)) {:uncomfortable-thing "Winking"})
 
 
