@@ -1,0 +1,41 @@
+<html>
+<head>
+  <script>
+    var node3 = {
+    value : "last",
+    next  : null
+    };
+    var node2 = {
+    value: "middle",
+    next : node3
+    };
+    var node1 = {
+    value: "first",
+    next : node2
+    };
+
+    var first = function(node){
+    return node.value;
+    };
+
+    var rest = function(node){
+    return node.next;
+    };
+
+    var cons = function(newValue, node){
+    return {
+      value : newValue,
+      next : node
+    };
+    };
+
+    var map = function (list, transform){
+    if(list == null){
+      return null;
+    } else {
+      return cons(transform(first(list)), map(rest(list), transform));
+    }
+    }
+  </script>
+</head>
+</html>

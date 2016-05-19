@@ -1,0 +1,58 @@
+﻿<이맥스 종료>
+C-x C-c
+
+<한영 변환>
+한영 입력 방식 변환 : C-\
+
+
+<버퍼관련>
+Kill Buffer : C-x k 
+Switch(Create) Buffer : C-x b
+버퍼 목록 보기 : C-x C-b
+
+<파일관련>
+파일 찾기(생성) : C-x C-f
+파일 저장 : C-x C-s
+
+<창 관련>
+창 위아래 분할 : C-x 2
+창 좌우 분할 : C-x 3
+창 이동 : C-x o
+현재 창 종료 : C-x 0
+모든 윈도우 종료 : C-x 1
+
+<이동관련>
+라인 처음으로 이동 : C-a
+라인 마지막으로 이동 : C-e
+한자리 앞으로(forward) 이동 : C-f
+한자리 뒤로(backward) 이동 : C-b
+한 단어 앞으로 : M-f
+한 단어 뒤로 : M-b
+페이지 이동 (앞으로) : C-v
+페이지 이동 (뒤로) :  M-v
+정규식 검색 후 일치하는 곳으로 이동(Forward) : C-s
+전규식 검색 후 일치하는 곳으로 이동(Backward) : C-r
+버퍼의 시작지점으로 이동 : M-<
+버퍼의 종료지점으로 이동 : M->
+특정 라인으로 이동 : M-g g
+
+<편집관련>
+Kill Line : C-k
+되돌리기(Undo) : C-/
+영역선택 : C-spacebar
+
+들여쓰기(Indent) : Tab
+뉴라인 + 들여쓰기 : C-j
+Kill region : C-w
+선택 영역 복사(Copy region to kill ring) : M-w
+붙여넣기(Yank) : C-y
+Cycle through kill ring after yanking : M-y
+단어 지우기(Kill word) : M-d
+
+
+<모드 관련>
+커맨드 실행 : M-x 후 커맨드
+ 
+
+<기타 참고 URL>
+https://kldp.org/node/129075
