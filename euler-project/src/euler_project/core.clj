@@ -6,9 +6,12 @@
 (defn make-list
   [max-num]
   (loop [num 0 result []]
+    (println (str "result :" result))
     (if (>= num max-num)
       result
       (recur (inc num) (conj result num)))))
+
+(make-list 10)
 
 (defn is-multiple?
   ([num]
@@ -48,8 +51,32 @@
 (defn is-factor? [num candid]
   (= (mod num candid) 0))
 
+(is-factor? 100 5)
+
 (defn factors-of [num]
   (set (map (fn [item] (if (is-factor? num item) item 1))
             (neutral))))
 
-(factors-of 600851475143)
+; out of memory error
+;(factors-of 600851475143)
+
+(defn factors-of2 [limit]
+  (loop [iter 1 result []]
+;    (println (str "result :" result))
+    (if (> iter limit)
+      result
+      (recur (inc iter) 
+             (if (is-factor? limit iter)
+               (conj result iter) result)))))
+
+(factors-of2 600851475143)
+
+
+(loop [iter 1]
+  (println (str "Iter:" iter))
+  (if (> iter 1000)
+    (println "Goodbye!")
+    (recur (inc iter))))
+
+
+(+ 1 2)
