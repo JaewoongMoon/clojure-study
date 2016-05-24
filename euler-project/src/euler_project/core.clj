@@ -45,11 +45,34 @@
 
 (second neutral)
 
-(defn is-factor? [num candid]
+
+(def large-n 600851475143)
+
+(defn factor? [num candid]
   (= (mod num candid) 0))
 
+;(defn prime? [num])
+
+(factor? 100 9)
+
 (defn factors-of [num]
-  (set (map (fn [item] (if (is-factor? num item) item 1))
+  (set (map (fn [item] (if (factor? num item) item 1))
             (neutral))))
 
-(factors-of 600851475143)
+(defn search-factor [limit]
+  (loop [start (dec limit)]
+    (if (factor? limit start)
+      (println (str "find:! " start))
+      (recur (dec start)))))
+
+(search-factor 19999000)
+
+
+(search-factor 102000)
+
+(search-factor large-n)
+
+
+
+
+

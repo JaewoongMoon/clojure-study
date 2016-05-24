@@ -55,6 +55,8 @@
 
 (list (str "a" "A") (str "b" "B") (str "c" "C"))
 
+; The following example shows how you could use this capability if you were a vampire trying to curb your human consumption. You have two vectors, one representing human intake in liters and another represeting critter intake for the past four days. The unify-diet-data function takes a single day's data for both human and critter feeding and unifies the two into a single map:
+
 (def human-consumption   [8.1 7.3 6.6 5.0])
 (def critter-consumption [0.0 0.2 0.3 1.1])
 (defn unify-diet-data
@@ -63,6 +65,9 @@
    :critter critter})
 
 (map unify-diet-data human-consumption critter-consumption)
+
+; Good job laying off the human!
+; Another fun thing you can do with map is pass it a collection of functions. You could use this if you wanted to perform a set of calculations on different collections of numbers, like so :
 
 (def sum #(reduce + %))
 
@@ -77,6 +82,9 @@
 
 (stats [80 1 44 13 6])
 
+; In this example, the stats function iterates over a vector of functions, applying each function to numbers. 
+; Additionally, Clojurists often use map to retrieve the value associated with a keyword from a collection of map data structures. Because keywords can be used as functions, you can do this succinctly. Here's an example:
+
 (def identities
   [{:alias "Batman" :real "Bruce Wayne"}
    {:alias "Spider-Man" :real "Peter Parker"}
@@ -85,13 +93,21 @@
 
 (map :real identities)
 
-; default usage of reduce : 
+; REDUCE
+; Chapter 3 showed how reduce processes each element in a sequence to build a result. This section shows couple of other ways to use it that might not be obvious. 
+; The first use is to transform a map's value, producing a new map with the same keys but with updated values:
 (reduce (fn [new-map [key val]]
           (assoc new-map key (inc val)))
         {}
         {:max 30 :min 10})
+; In this example, reduce treats the argument {:max 30 :min 10} as a sequence of vectors, like ([:max 30][:min 10]). Then, it starts with an empty map (the second argument) and builds it up using the first argument, an anonymous function. It's as if reduce does this :
 
-; Another usage of reduce : a filter
+(assoc (assoc {} :max (inc 30))
+  :min (inc 10))
+
+; The function assoc takes three arguments: a map, a key, and a value. It derives a new map from the map you give it by associating the given key with the given value. For exmaple, (assoc {:a 1} :b 2) would return {:a 1 :b 2}
+; Another use for reduce is to filter out keys from a map based on their value. In the following exmaple, the anonymous funciton checks whether the value of key-value pair is greather than 4. If it isn't , then the key-value pair is filtered out. In the map {:human 4.1 :critter 3.9}, 3.9 is less than 4, so the :critter key and its 3.9 value are filtered out. 
+
 (reduce (fn [new-map [key val]]
           (if (> val 4)
             (assoc new-map key val)
@@ -99,6 +115,8 @@
         {}
         {:human 4.1
          :critter 3.9})
+
+
 
 (take 3 [1 2 3 4 5 6 7 8 9 10])
 
