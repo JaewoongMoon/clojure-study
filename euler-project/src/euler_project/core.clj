@@ -61,3 +61,37 @@
 
 (factor? 100 10)
 
+
+(loop [iter 1]
+  (println (str "Iter:" iter))
+  (if (> iter 1000)
+    (println "Goodbye!")
+    (recur (inc iter))))
+
+
+(+ 1 2)
+
+(defn search-factor [limit]
+  (loop [start (dec limit)]
+    (if (factor? limit start)
+      (println (str "find:! " start))
+      (recur (dec start)))))
+
+(search-factor 199990)
+
+
+(search-factor 1000)
+
+(search-factor large-n)
+
+
+(defn getFirstFactor [num]
+  (loop [i 2]
+    (if (= i num) 1)
+    (if (= (mod num i) 0)
+      i
+      (recur (inc i)))))
+
+
+
+
