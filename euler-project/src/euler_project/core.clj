@@ -53,7 +53,7 @@
 
 ;(defn prime? [num])
 
-(factor? 100 9)
+(factor? 100 10)
 
 (defn factors-of [num]
   (set (map (fn [item] (if (factor? num item) item 1))
@@ -65,13 +65,20 @@
       (println (str "find:! " start))
       (recur (dec start)))))
 
-(search-factor 19999000)
+(search-factor 199990)
 
 
-(search-factor 102000)
+(search-factor 1000)
 
 (search-factor large-n)
 
+
+(defn getFirstFactor [num]
+  (loop [i 2]
+    (if (= i num) 1)
+    (if (= (mod num i) 0)
+      i
+      (recur (inc i)))))
 
 
 

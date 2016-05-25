@@ -116,8 +116,6 @@
         {:human 4.1
          :critter 3.9})
 
-
-
 (take 3 [1 2 3 4 5 6 7 8 9 10])
 
 (drop 3 [1 2 3 4 5 6 7 8 9 10])
@@ -139,9 +137,11 @@
 (take-while #(< (:month %) 4) 
             (drop-while #(< (:month %) 2) food-journal))
 
+; Use filter to return all elements of a sequence that test true for a predicate function. 
 (filter #(< (:human %) 5) food-journal)
 
-(some #(and (> (:critter %) 3) %) food-journal)
+; Often, you want to know whether a collection contains any values that test true for a predicate function. The some function does that, return the first truthy value (any value that's not false or nil) returned by a predicate function: 
+(some #(> (:critter %) 5) food-journal)
 
 (sort [3 1 2])
 
