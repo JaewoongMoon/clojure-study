@@ -48,35 +48,16 @@
 
 (second neutral)
 
-(defn is-factor? [num candid]
+
+(def large-n 600851475143)
+
+(defn factor? [num candid]
   (= (mod num candid) 0))
+
 
 (is-factor? 100 5)
 
-(defn factors-of [num]
-  (set (map (fn [item] (if (is-factor? num item) item 1))
-            (neutral))))
+;(defn prime? [num])
 
-; out of memory error
-;(factors-of 600851475143)
+(factor? 100 10)
 
-(defn factors-of2 [limit]
-  (loop [iter 1 result []]
-;    (println (str "result :" result))
-    (if (> iter limit)
-      result
-      (recur (inc iter) 
-             (if (is-factor? limit iter)
-               (conj result iter) result)))))
-
-(factors-of2 600851475143)
-
-
-(loop [iter 1]
-  (println (str "Iter:" iter))
-  (if (> iter 1000)
-    (println "Goodbye!")
-    (recur (inc iter))))
-
-
-(+ 1 2)
