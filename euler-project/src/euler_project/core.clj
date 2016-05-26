@@ -39,59 +39,38 @@
         (fib-list 4000000)))
 
 ; ex3) 600851475143 의 가장 큰 소인수 구하기 
-(defn neutral-numbers [start]
-  (lazy-seq 
-   (cons start 
-         (neutral-numbers (inc start) ))))
-
-(def neutral (take 600851475143 (neutral-numbers 1)))
-
-(second neutral)
-
 
 (def large-n 600851475143)
-
-(defn factor? [num candid]
-  (= (mod num candid) 0))
-
-
-(is-factor? 100 5)
-
-;(defn prime? [num])
-
-(factor? 100 10)
-
-
-(loop [iter 1]
-  (println (str "Iter:" iter))
-  (if (> iter 1000)
-    (println "Goodbye!")
-    (recur (inc iter))))
-
-
-(+ 1 2)
-
-(defn search-factor [limit]
-  (loop [start (dec limit)]
-    (if (factor? limit start)
-      (println (str "find:! " start))
-      (recur (dec start)))))
-
-(search-factor 199990)
-
-
-(search-factor 1000)
-
-(search-factor large-n)
-
-
-(defn getFirstFactor [num]
+(defn first-factor [n]
   (loop [i 2]
-    (if (= i num) 1)
-    (if (= (mod num i) 0)
-      i
-      (recur (inc i)))))
+    (cond
+     (= n i) 1
+     (= (mod n i) 0) i
+     :else (recur (inc i)))))
+
+(loop [n large-n 
+       factor (first-factor large-n)]
+  (if (= factor 1)
+    n
+    (let [q (/ n factor)] 
+      (recur q
+             (first-factor q)))))
 
 
+; ex4 ) 세자리 수의 곱셈으로 구할 수 있는 가장 큰 대칭수 
+(map + (into [] (set "1234")))
+(count (set "1234"))
+(count "1234")
+(count (str 1234))
+(Integer. "123")
+(= "1" "1")
+   
+(defn parlin? [n]
+  (let [n-set (set n)]
+    ))
 
+
+(def src-n (into [] "12344321"))
+
+(= (last src-n) (first src-n))
 
