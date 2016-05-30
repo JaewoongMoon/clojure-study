@@ -58,19 +58,20 @@
 
 
 ; ex4 ) 세자리 수의 곱셈으로 구할 수 있는 가장 큰 대칭수 
-(map + (into [] (set "1234")))
-(count (set "1234"))
-(count "1234")
-(count (str 1234))
-(Integer. "123")
-(= "1" "1")
-   
-(defn parlin? [n]
-  (let [n-set (set n)]
-    ))
 
+(defn sym? [n]
+  (let [cnt (count (str n))]
+    (if (= (mod cnt 2) 1)
+      false
+      (let [str-n (str n)]
+        (loop [start 0 end (dec cnt)]
+          (cond
+           (> start (dec end)) true
+           (not= (get str-n start) (get str-n end)) false
+           :else (recur (inc start) (dec end))))))))
 
-(def src-n (into [] "12344321"))
-
-(= (last src-n) (first src-n))
+(apply max (for [i (range 100 999)
+           j (range 100 999)
+           :let [n (* i j)]
+           :when (sym? n)] n))
 
