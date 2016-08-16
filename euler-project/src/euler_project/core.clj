@@ -43,6 +43,24 @@
 (def large-n 600851475143)
 (defn first-factor [n]
   (loop [i 2]
+<<<<<<< HEAD
+    (if (= i num) 1)
+    (if (= (mod num i) 0)
+      i
+      (recur (inc i)))))
+
+(getFirstFactor 3)
+
+(last
+ (for [i (range 1000)
+       j (range 1000)
+       :let [n (* i j)]
+       :when (and (= (mod n 13) 0)
+                  (= (mod i 7) 0))]
+   n))
+
+(range 100 999)
+=======
     (cond
      (= n i) 1
      (= (mod n i) 0) i
@@ -76,6 +94,7 @@
            :when (sym? n)] n))
 
 
+<<<<<<< HEAD
 ; ex5) 1~20 사이의 어떤 수로도 나누어 떨어지는 가장 작은 수 
 (range 1 21)
 
@@ -88,3 +107,5 @@
 
 
 
+=======
+>>>>>>> 4a10ed7aca3054138706bec6d09bf70fb800755f
