@@ -75,3 +75,16 @@
            :let [n (* i j)]
            :when (sym? n)] n))
 
+
+; ex5) 1~20 사이의 어떤 수로도 나누어 떨어지는 가장 작은 수 
+(range 1 21)
+
+
+(def src [{:mit 2 :zisu 3}
+          {:mit 3 :zisu 2}
+          {:mit 2 :zisu 3}])
+; 중복 제거 테스트 
+(set src)
+
+
+
