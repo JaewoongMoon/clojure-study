@@ -6,8 +6,17 @@
 ; Chapter 9. THE SACRED ART OF CONCURRENT AND PARALLEL PROGRAMMING
 
 ; If I were the lord of a manor and you were my heir, I would sit you down on your 13th name day and tell you, "The world of computing is changing, lass, and ye must be prepared for the new world of multi-core processors lest ye be trampled by it.
-; 만약 제가 영주이고 당신이 내 계승자라면, 그대의 13번째 생일에 의자에 앉히고 말할 것입니다.
-; 컴퓨터 세계는 바뀌고 있단다,얘야. 너는 반드시 새로운 멀티코어 프로세서의 세계에 대비해야 한단다. 너를 그 것들이 짓밟지 못하도록 말이야.   
+; 만약 내가 영주이고 당신이 내 계승자라면, 너의 13번째 생일에 의자에 앉히고 말할 것입니다.
+; 컴퓨터 세계는 바뀌고 있단다,얘야. 너는 반드시 새로운 멀티코어 프로세서의 세계에 대비해야 한단다. 그 것들이 너를 짓밟지 못하도록 말이야.   
+
+
+
+;<Concurrency and Parallelism Concepts>
+; Concurrent and parallel programming invloves a lot of messy details at all levels of program execution, from the hardward to the operating system to programming lanuage libraries to the code that springs from your heart and lands in your editor. 
+; 동시성과 병렬 프로그래밍은 많은 지저분한 부분들을 포함합니다. 프로그램 실행, 하드웨어에서부터 OS, 프로그래밍 언어 라이브러리에서부터 코드-여러분의 마음과 땅인 이맥스 에디터로 부터 탄생한-까지 모든 부분에서 말이죠. 
+; But before you worry your head with any of those details, in this sections I'll walk through the high-level concepts that surround concurrency and parallelism. 
+; 그러나 이번 섹션에서는 그런 머리아픈 세세한 부분보다는 동시성과 병렬 프로그래밍에 대한 대략적 수준의 컨셉만을 다루려고 합니다. 
+
 
 ; There are three central challenges in concurrent programming.
 ; The first Concurrency Goblin : the reference cell problem. 
