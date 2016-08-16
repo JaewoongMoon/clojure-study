@@ -6,9 +6,12 @@
 (defn make-list
   [max-num]
   (loop [num 0 result []]
+    (println (str "result :" result))
     (if (>= num max-num)
       result
       (recur (inc num) (conj result num)))))
+
+(make-list 10)
 
 (defn is-multiple?
   ([num]
@@ -36,45 +39,11 @@
         (fib-list 4000000)))
 
 ; ex3) 600851475143 의 가장 큰 소인수 구하기 
-(defn neutral-numbers [start]
-  (lazy-seq 
-   (cons start 
-         (neutral-numbers (inc start) ))))
-
-(def neutral (take 600851475143 (neutral-numbers 1)))
-
-(second neutral)
-
 
 (def large-n 600851475143)
-
-(defn factor? [num candid]
-  (= (mod num candid) 0))
-
-;(defn prime? [num])
-
-(factor? 100 10)
-
-(defn factors-of [num]
-  (set (map (fn [item] (if (factor? num item) item 1))
-            (neutral))))
-
-(defn search-factor [limit]
-  (loop [start (dec limit)]
-    (if (factor? limit start)
-      (println (str "find:! " start))
-      (recur (dec start)))))
-
-(search-factor 199990)
-
-
-(search-factor 1000)
-
-(search-factor large-n)
-
-
-(defn getFirstFactor [num]
+(defn first-factor [n]
   (loop [i 2]
+<<<<<<< HEAD
     (if (= i num) 1)
     (if (= (mod num i) 0)
       i
@@ -91,33 +60,37 @@
    n))
 
 (range 100 999)
+=======
+    (cond
+     (= n i) 1
+     (= (mod n i) 0) i
+     :else (recur (inc i)))))
+
+(loop [n large-n 
+       factor (first-factor large-n)]
+  (if (= factor 1)
+    n
+    (let [q (/ n factor)] 
+      (recur q
+             (first-factor q)))))
 
 
-(last
- (for [i (range 100 999)
-       j (range 100 999)
-       :let [n (* i j)]
-       :when (sym? n)]
-   n))
+; ex4 ) 세자리 수의 곱셈으로 구할 수 있는 가장 큰 대칭수 
+
+(defn sym? [n]
+  (let [cnt (count (str n))]
+    (if (= (mod cnt 2) 1)
+      false
+      (let [str-n (str n)]
+        (loop [start 0 end (dec cnt)]
+          (cond
+           (> start (dec end)) true
+           (not= (get str-n start) (get str-n end)) false
+           :else (recur (inc start) (dec end))))))))
+
+(apply max (for [i (range 100 999)
+           j (range 100 999)
+           :let [n (* i j)]
+           :when (sym? n)] n))
 
 
-
-
-; Prime number
-(defn get-primes [n]
-  )
-
-
-; [1 ... 20]
-
-; 
-(mod 20 5)
-
-
-; 72 -> [{:mit 2 :zisu 3} {:mit 3 :zisu 2}]
-; 72 를 2로 나눈다. 결과 36 나머지 0
-; 나머지가 0이라면 계속 나눈다. 결과 18 나머지 0
-; 나머지가 0이라면 계속 나눈다. 결과 9 나머지 0
-; 2로 나눈 나머지가 0이 아니므로, 다음 소수인 3으로 나눈다. 
-; 나머지가 0이라면 계속 나눈다. 결과 3 나머지 0
-; 나머지 0이라면 계속 나눈다

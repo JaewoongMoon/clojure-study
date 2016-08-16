@@ -380,7 +380,10 @@ failed-protagonist-names
 
 ; ******************************************************************
 ; PULLING IT ALL TOGETHER
+; Okay! It's time to use your newfound knowledge for a noble purpose: smacking around hobbits! 
+
 ;; THE SHIRE's NEXT TOP MODEL 
+; For our hobbit model, we'll eschew such hobbit characteristics as joviality and mischievousness and focus only on the hobbit's tiny body. Here's the hobbit model. 
 (def asym-hobbit-body-part [{:name "head" :size 3}
                             {:name "left-eye" :size 1}
                             {:name "left-ear" :size 1}
@@ -400,6 +403,8 @@ failed-protagonist-names
                             {:name "left-lower-leg" :size 3}
                             {:name "left-achilles" :size 1}
                             {:name "left-foot" :size 2}])
+
+; This is a vector of maps. Each map has the name of the body part and relative size of the body part. (I know that only anime characters have eyes one-third the size of their head, but just go with it, okay?)
 
 
 (defn matching-part
@@ -421,17 +426,6 @@ failed-protagonist-names
                      (set [part (matching-part part)])))))))
 
 
-(defn symmetrize-body-parts
-  "Expects a seq of maps that have a :name and :size "
-  [asym-body-parts]
-  (loop [remaining-asym-parts asym-body-parts final-body-parts []]
-    (if (empty? remaining-asym-parts)
-      final-body-parts
-      (let [[part & remaining] remaining-asym-parts]
-        (recur remaining
-               (into final-body-parts
-                     (set [part (matching-part part)])))))))
-
 (symmetrize-body-parts asym-hobbit-body-part)
 
 ; The symmetrize-body-parts function employs a general strategy that is common in functional programming. 
@@ -448,25 +442,8 @@ failed-protagonist-names
 
 ; DETAIL EXPLAIN OF ABOVE START ********************************************
 ; 1) let  
-; exmaples
-(let [x 3] 
-  x)
-
-(def dalmatian-list
-  ["Pongo" "Perdita" "Puppy 1" "Puppy 2"])
-
-(let [dalmatians (take 2 dalmatian-list)]
-  dalmatians)
-; -> ("Pongo" "Perdita")
-
-; using rest parameter
-; let forms follow all the destructing rules.
-; So, [pongo & dalmatians] destructed dalmatian-list
-; Binding the string "Pongo" to the name pongo
-; and the list of the rest the dalmatians to dalmatians
-(let [[pong & dalmatians] dalmatian-list]
-  [pong dalmatians])
-; -> ["Pongo" ("Perdita" "Puppy 1" "Puppy2")]
+; bind the name x to the value 3.
+(let [x 3] x)
 
 
 ; let also introduces a new scope
@@ -481,10 +458,23 @@ x
 (let [x (inc x)] x)
 ; -> 1
 
-; let forms have tow main uses.
-; First, they provide clarity by allowing you to name things.
-; Second, they allow you to evaluate an expression only once and reuse the result.
-; => (local variables)
+
+(def dalmatian-list
+  ["Pongo" "Perdita" "Puppy 1" "Puppy 2"])
+
+; bind the name dalmatians to the result of the expression (take 2 dalmatian-list)
+(let [dalmatians (take 2 dalmatian-list)]
+  dalmatians)
+; -> ("Pongo" "Perdita")
+
+; you can also use rest parameters in let, just like you can in funaction : 
+(let [[pongo & dalmatians] dalmatian-list]
+  [pongo dalmatians])
+; -> ["Pongo" ("Perdita" "Puppy 1" "Puppy2")]
+
+; Notice that the value of a let form is the last form in its body that is evaluated. let forms follow all the destructing rules introduced in "Calling Functions". In this case, [pongo & dalmatians] destructed dalmatian-list, binding the string "Pongo" to the name pongo and the list of the rest of the dalmatians to dalmatians. The vector [pongo dalmatians] is the last expression in let, so it's the value of the let form. 
+
+; let forms have two main uses. First, they provide clarity by allowing you to name things. Second, they allow you to evaluate an expression only once and reuse the result. This is especially important when you need to reuse the result of an expensive function call, like a network API call. It's also important when the expression has side effects. 
 
 ; 2) loop
 (loop [iteration 0]
