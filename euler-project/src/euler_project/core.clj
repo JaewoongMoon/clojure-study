@@ -80,6 +80,44 @@
       i
       (recur (inc i)))))
 
+(getFirstFactor 3)
+
+(last
+ (for [i (range 1000)
+       j (range 1000)
+       :let [n (* i j)]
+       :when (and (= (mod n 13) 0)
+                  (= (mod i 7) 0))]
+   n))
+
+(range 100 999)
+
+
+(last
+ (for [i (range 100 999)
+       j (range 100 999)
+       :let [n (* i j)]
+       :when (sym? n)]
+   n))
 
 
 
+
+; Prime number
+(defn get-primes [n]
+  )
+
+
+; [1 ... 20]
+
+; 
+(mod 20 5)
+
+
+; 72 -> [{:mit 2 :zisu 3} {:mit 3 :zisu 2}]
+; 72 를 2로 나눈다. 결과 36 나머지 0
+; 나머지가 0이라면 계속 나눈다. 결과 18 나머지 0
+; 나머지가 0이라면 계속 나눈다. 결과 9 나머지 0
+; 2로 나눈 나머지가 0이 아니므로, 다음 소수인 3으로 나눈다. 
+; 나머지가 0이라면 계속 나눈다. 결과 3 나머지 0
+; 나머지 0이라면 계속 나눈다
