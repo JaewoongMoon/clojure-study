@@ -202,10 +202,10 @@
 
 ; src4 를 순회하면서 
 ; 다음과 같은 리턴결과 만들기
-; [{:base 2 :exponent [1 2]} {:base 3 :exponent [2]}]
-(def src4 [{:base 2 :exponent 1}
-           {:base 3 :exponent 2}
-           {:base 2 :exponent 2}])
+; [{:base 2 :exponent #{1 2}} {:base 3 :exponent #{2}}]
+(def src4 [{:base 2 :exponent #{1} }
+           {:base 3 :exponent #{2} }
+           {:base 2 :exponent #{2} }])
 
 (loop [remaining src4 final-result []]
   (if (empty? remaining)
@@ -217,11 +217,9 @@
 
 
 ; 추가할 때 로직이 final-result 에 해당 아이템이 있는지 없는지 체크를 하는 로직이 필요하다.
-; 이를 위한 펑션 
-
+; 이를 위한 펑션 : has-base
 (def result [{:base 2 :exponent 1}]) 
 (def new-item {:base 2 :exponent 2}) ; param 2
-
 
 (defn has-base? [target base]
   (loop [remaining target]
@@ -235,15 +233,15 @@
 (has-base? result 3)
 
 
-(if (has-base? 2)
-  (result ) ; 기존 item에 value append 
+(if (has-base? result 2)
+  (append-exponent result 2) ; 기존 item에 value append 
   () ; 새로운 item 추가 
 )
 
-; 1) 기존 item 에 value 추가하기 
-; 예를들어, {:base 2 :exponent [1]} 가 있을 때 2를 추가해서
-; {:base 2 :exponent [1 2]} 를 리턴한다.
-(def map1 {:base 2 :exponent [1]} )
+; 1) 기존 item 에 value 추가하는 펑션 
+; 예를들어, {:base 2 :exponent #{1}} 가 있을 때 2를 추가해서
+; {:base 2 :exponent #{1 2}} 를 리턴한다.
+(def map1 {:base 2 :exponent #{1} } )
 
 (defn append-exponent [map item]
   {:base (get map :base)
