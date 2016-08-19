@@ -69,10 +69,6 @@
 
 (range 100 999)
 
-    (cond
-     (= n i) 1
-     (= (mod n i) 0) i
-     :else (recur (inc i)))))
 
 (loop [n large-n 
        factor (first-factor large-n)]
@@ -114,30 +110,42 @@
 
 ; 1-1 ) prime-helper
 ; target (타겟 넘버), base (밑) 를입력받으면 target를 더 이상 나눠지지 않을 때까지 base로 나눈 결과를 리턴하는 함수
-(defn prime-helper[target base]
-  (loop [exponent 0 remain target]
-    (if (not= (mod remain base) 0)
-      {:base base :exponent exponent :remain remain}
-      (recur (inc exponent)(/ remain base)))))
 
-; 1-2) prime-helper2
-; 인수의 exponent 가 0이면 제외시키고 0이 아니면 추가시키는 함수 
+; :exponent 의 set 으로 리턴하도록 개선한 방식 
+; quotient : 몫
+; exponent : 지수
+; base : 밑 
+(defn factorization-helper [num base]
+  (loop [quotient num 
+         exponent 0]
+    (if (not= (mod quotient base) 0) ; 더 이상 나눠지지 않는다면 
+      {:base base :exponent #{exponent} :quotient quotient}
+      (recur (/ quotient base)
+             (inc exponent)))))
+
+(factorization-helper 10 3)
+(get (factorization-helper 10 3) :exponent) 
 
 ; 1-2) prime-factorization
 ; 2부터 시작해서 prime-helper에 넣는다.
 ; 결과 맵을 최종 결과 리스트에 저장한다.
-; 결과 맵의 :remain 값이 0이면 종료
+; 결과 맵의 :remain 값이 1이면 종료
 ; 아닐경우 +1한 값, 3이 prime-helper에 들어간다.  (반복)
 
 (defn prime-factorization[num]
-  (loop [base 2 remain num result []]
-;    (println result)
-    (let [item (prime-helper remain base)]
-      (if (= (get item :remain) 1)
+  (loop [base 2 
+         quotient num 
+         result []]
+    (let [item (factorization-helper quotient base)]
+      (if (= (get item :quotient) 1) ;몫이 1, 즉 더 나눌 수 없다면
         (conj result item)
-        (recur (inc base)(get item :remain)(if (not= (get item :exponent) 0)
-                                               (conj result item)
-                                               result))))))
+        (recur (inc base)
+               (get item :quotient)
+               (if (not= (get item :exponent)#{0})
+                 (conj result item)
+                 result))))))
+
+(prime-factorization 72)
 
 
 
@@ -145,17 +153,101 @@
 (map prime-factorization (range 1 21))
 (map prime-factorization [10 12])
 
-
-; STEP 3.그 중에서 지수가 가장 큰 소인수들을 찾는다. 
-; 지수가 가장 큰 소인수들로 구성된 리스트를 반환하는 함수
-(defn )
-
-(def my-test {:my ({:test 1}{:test 2}{:test 3})})
-
-; STEP 4. 소인수들을 서로 곱한다.
-; 결과 리스트를 계산하는 함수 : reduce 사용
+(def src (map prime-factorization [10 12]))
 
 
- 
 
+; STEP 3. 소인수들의 리스트를 밑을 기준으로 정리한다. 
+; 3-1. 소인수들의 지수목록을 정리해서 보여주는 함수
+; 예를들어, 요런 모양으로 재편성 해주는 함수
+; 결과 벡터에는 중복된 base 값이 없다. 
+; => [{:base 2 :exponent #{1, 2, 3}}, {:base 3 :exponent #{2}]]
+
+
+
+
+
+;------------------------------------------------------------
+; STEP 4. 지수가 가장 큰 소인수들을 서로 곱한다.
+; 제곱값 구하는 함수 
+(defn exp [x n]
+  (reduce * (repeat n x)))
+
+(exp 2 3)
+
+; 최종 결과 리스트를 계산하는 함수 : reduce 사용
+
+; ver2.
+(def test-src2 [{:base 2 :exponent #{1, 2, 3}} {:base 3 :exponent #{2}}])
+
+
+(reduce * (map #(exp (get % :base) (apply max (get % :exponent))) 
+               test-src2)) 
+
+(apply max #{1 2 3})
+
+
+
+;--
+; 연습장..
+; 결과 리스트를 순회한다.
+(loop [remaining-list src 
+       final-result []]
+  (if (empty? remaining-list)
+    final-result
+    ()))
+
+(empty? src)
+
+
+; src4 를 순회하면서 
+; 다음과 같은 리턴결과 만들기
+; [{:base 2 :exponent [1 2]} {:base 3 :exponent [2]}]
+(def src4 [{:base 2 :exponent 1}
+           {:base 3 :exponent 2}
+           {:base 2 :exponent 2}])
+
+(loop [remaining src4 final-result []]
+  (if (empty? remaining)
+    final-result
+    (let [[item & rest] remaining]
+      (recur rest
+             (if (get item ))                ; final-result 에 아이템 추가하기 
+             ))))
+
+
+; 추가할 때 로직이 final-result 에 해당 아이템이 있는지 없는지 체크를 하는 로직이 필요하다.
+; 이를 위한 펑션 
+
+(def result [{:base 2 :exponent 1}]) 
+(def new-item {:base 2 :exponent 2}) ; param 2
+
+
+(defn has-base? [target base]
+  (loop [remaining target]
+    (if (empty? remaining)
+      false
+      (let [[item & rest] remaining]
+        (if (= (get item :base) base)
+          true
+          (recur rest ))))))
+
+(has-base? result 3)
+
+
+(if (has-base? 2)
+  (result ) ; 기존 item에 value append 
+  () ; 새로운 item 추가 
+)
+
+; 1) 기존 item 에 value 추가하기 
+; 예를들어, {:base 2 :exponent [1]} 가 있을 때 2를 추가해서
+; {:base 2 :exponent [1 2]} 를 리턴한다.
+(def map1 {:base 2 :exponent [1]} )
+
+(defn append-exponent [map item]
+  {:base (get map :base)
+    :exponent (conj (get map1 :exponent) item)})
+
+(append-exponent map1 2)
 

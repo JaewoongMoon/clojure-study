@@ -467,10 +467,15 @@ x
   dalmatians)
 ; -> ("Pongo" "Perdita")
 
-; you can also use rest parameters in let, just like you can in funaction : 
+; you can also use rest parameters in let, just like you can in functions : 
 (let [[pongo & dalmatians] dalmatian-list]
   [pongo dalmatians])
 ; -> ["Pongo" ("Perdita" "Puppy 1" "Puppy2")]
+
+(let [[dog & dalmatians] dalmatian-list]
+  (recur dalmatians
+         (println "name:" dog)))
+
 
 ; Notice that the value of a let form is the last form in its body that is evaluated. let forms follow all the destructing rules introduced in "Calling Functions". In this case, [pongo & dalmatians] destructed dalmatian-list, binding the string "Pongo" to the name pongo and the list of the rest of the dalmatians to dalmatians. The vector [pongo dalmatians] is the last expression in let, so it's the value of the let form. 
 
@@ -593,6 +598,9 @@ x
 ; If I have, that means the body part I just lined up was the on hit.
 ; Othersize, I just keep lining up those parts.
 
+
+
+;;
 ; EXERCISES
 ; ex2) Write a function that takes a number and adds 100 to it.
 (defn addFrom100
