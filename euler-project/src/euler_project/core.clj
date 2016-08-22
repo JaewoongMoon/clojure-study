@@ -119,7 +119,7 @@
   (loop [quotient num 
          exponent 0]
     (if (not= (mod quotient base) 0) ; 더 이상 나눠지지 않는다면 
-      {:base base :exponent #{exponent} :quotient quotient}
+      {:base base :exponent exponent :quotient quotient}
       (recur (/ quotient base)
              (inc exponent)))))
 
@@ -141,7 +141,7 @@
         (conj result item)
         (recur (inc base)
                (get item :quotient)
-               (if (not= (get item :exponent)#{0})
+               (if (not= (get item :exponent) 0)
                  (conj result item)
                  result))))))
 
@@ -154,7 +154,7 @@
 (map prime-factorization [10 12])
 
 (def src (map prime-factorization [10 12]))
-
+;=> ([{:base 2, :exponent #{1}, :quotient 5} {:base 5, :exponent #{1}, :quotient 1}] [{:base 2, :exponent #{2}, :quotient 3} {:base 3, :exponent #{1}, :quotient 1}])
 
 
 ; STEP 3. 소인수들의 리스트를 밑을 기준으로 정리한다. 
@@ -219,7 +219,8 @@
 ; 추가할 때 로직이 final-result 에 해당 아이템이 있는지 없는지 체크를 하는 로직이 필요하다.
 ; 이를 위한 펑션 : has-base
 (def result [{:base 2 :exponent 1}]) 
-(def new-item {:base 2 :exponent 2}) ; param 2
+(def new-item {:base 2 :exponent 2}) 
+(def new-item2 {:base 3 :exponent 3})
 
 (defn has-base? [target base]
   (loop [remaining target]
@@ -233,19 +234,48 @@
 (has-base? result 3)
 
 
-(if (has-base? result 2)
-  (append-exponent result 2) ; 기존 item에 value append 
-  () ; 새로운 item 추가 
-)
+(defn get-target-base-item [target base]
+  (loop [remaining target]
+    (if (empty? remaining)
+      nil
+      (let [[item & rest] remaining]
+        (if (= (get item :base) base)
+          item
+          (recur rest ))))))
 
-; 1) 기존 item 에 value 추가하는 펑션 
+(get-target-base-item result 3)
+
+
+; 하나의 소인수 분해 벡터값에 대해 재정렬 해주는 펑션 
+(defn some-func [result vector]
+  (loop [new-result result
+         remaining vector]
+    (let [[map & rest] remaining]
+      (let [ (get-target-base-item result (get map :base)) target-map]
+        (recur (if target-map
+                 (conj new-result (append-exponent target-map   
+                                            (get map :exponent))) 
+                 (conj new-result {:base (get target-map :base)
+                                   :exponent #{(get target-map :exponent)}}))
+               ))))
+
+; 1) 기존 맵에 새로운 지수 값을 추가하는 펑션 
 ; 예를들어, {:base 2 :exponent #{1}} 가 있을 때 2를 추가해서
 ; {:base 2 :exponent #{1 2}} 를 리턴한다.
 (def map1 {:base 2 :exponent #{1} } )
 
-(defn append-exponent [map item]
+(defn append-exponent [map exponent]
   {:base (get map :base)
-    :exponent (conj (get map1 :exponent) item)})
+    :exponent (conj (get map1 :exponent) exponent)})
 
 (append-exponent map1 2)
 
+; 2) 리스트에 새로운 맵을 추가 
+(conj result new-item2) 
+
+
+(set (#{1} #{2}))
+
+(nth #{1} 0)
+
+(nth [1] 0)
