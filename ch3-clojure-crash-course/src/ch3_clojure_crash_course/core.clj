@@ -3,16 +3,59 @@
 
 ;************************************************************************
 ; Chapter 3. Do Things : A Clojure Crash Course
+; It's time to learn how to actually do things with Clojre! Hot dammn! Although you've undoubtedly heard of Clojure's awesome concurrency support and other supendous features, Clojure's most salient characteristic is that it is a Lisp. In this chapter, you'll expore the elements that compose this Lisp core:syntax, functions, and data. Together they will give you a solid foundation for representing and solving problems in Clojure.
+
+; After laying this groundwork, you will be able to write some super important code. In the last section, you'll tie everything together by creating a model of a hobbit and writing a function to hit it in a random spot. Super! Important!
+
+; As you move through the chapter, I recommned that you type this examples in a REPL and run them. Programming in a new language is a skill, and just like youdeling or synchromnized swimming, you have to practice to learn it. By the way, Synchronized Swimming for Youdleer for the Brave and True willl be published in August of 20never. Keep an eye out for it!
+
+; Syntax
+; Clojure's syntax is simple. Like all Lisps it employs a uniform structure, a handful of special operators, and a constant supply of parentheses deliverd from the parenthesis mindes hidden beneath the Massachusettts Institute of Technology, where Lisp was born.
+
+; Forms
+; All Clojure code is written in a uniform structure. Clojure recognizes kinds of structures:
+; Literal representations of data stuctures (like numbers, strings, maps, and vectors)
+; Operations
+; We use the term form to refer to valid code. I'll also sometimes use expression to refer to Clojure forms. But don't get too hung up on the terminology. Clojure evaluates every form to produce a value. These literal representations are all valid forms:
+; Your code will rarely contain free-floating literals, of course, because they don't actually do anything on their own. Instead, you'll use literals in operations. Operations are how you do things. All operations take the form opening parenthesis, operator, operads, closing parenthesis:
+
 (str "It was the panda " "in the library" "with a dust buster")
 
-;; CONTROL FLOW 
+;; CONTROL FLOW
+; The do operator lets you wrap up multipole forms in parentheses and run each of them.
+; Try the following in your REPL:
+
+; This operator lets you do multiple things in each of the if expression's branches.
+; In this case, two things happen:
+; Success! is printed in the REPL, and "By Zeus's hammer!" is returned as the value of the
+; entire if expression.
+
 (if true
   (do (println "Success!")
       "By Zeus's hammer!")
   (do (println "Failure!")
       "By Aquaman's trident!"))
 
-;;; nil, true, false, Truthniss, Equality, and Boolean Expressions 
+; You can also omit the else branch. If you do that and the Boolean expression is false,
+; Clojure returns nil, like this:
+(if false
+  "By Odin's Elbow!")
+; => nil
+
+; when
+; The when operator is like a combination of if and do,
+; but with no else branch. Here's an example:
+(when true
+  (println "Success!")
+  "abra cadabra")
+; Use when if you want to do multiple things when some condition is true,
+; and you always want to return nil when the condition is false.
+
+
+
+;;; nil, true, false, Truthniss, Equality, and Boolean Expressions
+; Clojure has true and false values. nil is used to indicate no value in Clojure.
+; You can check if a vaue is nil with the appropriately named nil? function:
 (or false nil :large_I_mean_venti :why_cant_I_just_say_large)
 
 ; nil is incicated no value in Clojure
@@ -22,16 +65,90 @@
 (nil? nil) 
 ;->true
 
+; Both nil and false are used to represent logical falsiness, whereas all other values are
+; logically truthy. Truthy and falsey refer to how a value is treated in a Boolean expression,
+; like the first expression passed to if:
 
+(if "bears eat beets"
+  "bears beets Battlestar Galactica")
+
+(if nil
+  "This won't be the result because nil if falsey"
+  "nil is falsey")
+
+
+; Clojure's equality operator is =:
+
+; Some other languages require you to use different operators when comparing values of
+; different types. For exmaple, you might have to use some kind of special string
+; equlaity operator made just for strings. But you don't need anything weird or tedious
+; like that to test for equality when using Clojure's built-int data structures.
+
+; Clojure uses the Boolean operators or and and. or returns either the first truthy value
+; or the last value. and returns the first falsey value or, if no values are falsey,
+; the last truthy value. Let's look at or first:
+(or false nil :large_I_mean_venti :why_cant_I_just_say_large)
+; => :large_I?mean_venti
+; In the first example, the return value is :large_I_mean_venti because it's the first
+; truthy value.
 
 (or (= 0 1) (= "yes" "no"))
+; => false
+; The second example has no truthy values, so or returns the last value, which is false.
+
+(or nil)
+; => nil
+; In the last example, once again no truthy values exist, and or returns the last value,
+; which is nil.
+
+; Now let's look at and:
+(and :fee_wifi :hot_coffee)
+; => :hot_coffee
+; In the first example, and returns the last truthy value, :hot_coffee.
+
+(and :fellin_super_cool nil false)
+; => nil
+; In the second example, and returns nil, which is the first falsey value.
+
+
+
 
 ;; NAMING VALUES WITH DEF
+; You use def to bind a name to a value in Clojure:
 (def failed-protagonist-names
   ["Larry Potter" "Doreen the Explorer" "The Incredible Bulk"])
 
 failed-protagonist-names
+; In this case, you're binding the name failed-protagonist-names to a vector containing
+; three strings.
 
+; Notice that I'm using the term bind, whereas in other languages you'd say you're
+; assinging a value to a variable. Those other languages typically encourage you to perform
+; multiple assignments to the same variable.
+
+; For example, in Ruby you might perform multiple assignments to a variable to build up
+; it's value:
+severity = :mild
+error_message = "OH GOD! IT'S A DISASTER! WE'RE "
+if severity == :mild
+  error_message = error_message + "MILDLY INCONVENIENCED!"
+else
+  error_message = error_message + "DOOOOOOOMED!"
+end
+
+; You might be templed to do something similar in Clojure:
+(def severity :mild)
+(def error-message "OH GOD! IT'S A DISASTER! WE'RE ")
+(if (= severity :mild)
+  (def error-message (str error-message "MILDLY INCONVENIENCED!"))
+  (def error-message (str error-message "DOOOOOOOMED!")))
+
+; However, change the value associated with a name like this can make it harder to
+; understand your program's behavior because it's more difficult to know which value
+; is associated with a name or why that value might have changed. Clojure has a set of
+; tools for dealing with change, which you'll learn about in Chapter 10. As you learn
+; Clojure,you'll find that you 'll rarely need to alter a name/value association.
+; Here's one way you could write the preceding code:
 (defn error-message
   [severity]
   (str "OH GOD! IT'S A DISASTER! WE'RE "
@@ -39,43 +156,121 @@ failed-protagonist-names
          "MILDY INCONVENIENCED!"
          "DOOOOOOOOOOOMED!")))
 
+(error-message :mild)
+; Here, you can create a function, error-message, which accepts a single argument,
+; everity, and uses that to determine which string to return. You then call the
+; function with :mild for the severity. You'll learn all about creating functions in
+; "Functions" on page 48; in the meantime, you should treat def as if it's defining
+; constants. In the next few chapters, you'll learn how to work with this apparent
+; limitation by embracing the functional programming padadigm.
+
+
 
 ; DATA STRUCTURES
+; Clojure comes with a handful of data structures that you'll use the majority of the time.
+; If you're coming from an object-oriented background, you'll be surprised at how much
+; you can do with the seemingly basic types presented here.
+
+; All of Clojure's data structures are immutable, meaning your can't change them in place.
+; For example, in Ruby you could do the following to reassign the failed protagonist name
+; at index 0:
+
+failed_protagonist_names = [
+  "Larry Potter",
+  "Doreen the Explorer",
+  "The Incredible Bulk"
+]
+failed_protagonist_names[0] = "Gary Potter"
+
+failed_protagonist_names
+# => [
+#   "Gary Potter",
+#   "Doreen the Explorer",
+#   "The Incredible Bulk"
+# ]
+
+; Clojure has no equivalent for this. You'll learn more about why Clojure was implemented
+; this way in Chapter 10, but for now it's fun to learn just how to do things without all
+; that philosiphizing. Without further ado, let's look at numbers in Clojure. 
+
+
+; Numbers
+93
+1.2
+1/5
+
+; Strings
+; String represent text. The name comes from the ancient Phoenicians, who one day invented
+; the alphabet after an accidient involving yarn. Here are some examples of string literals:
+"Lord Vordemort"
+"\"He who must not be named\""
+"\"Great cow of Moscow!\" - Hermes Conrad"
+; Notice that Clojure only allows double quotes to delineate strings. 'Lord Voldemort',
+; for example, is not a valid string. Also notice that CLojure doesn't have string interpol
+;-ation. It only allows concaternation via the str function. 
+
 ;; MAPS
+; Maps are similar to dictionaries or hashed in other languages.
+; They're a way of associating some value with some other value.
+; The two kinds of maps in Clojure are hash maps and sorted maps.
+; I'll only cover the more basic hash maps. Let's look at some examples of map literals.
+; Here's an empty map:
+
 {}
+; In this example, :first-anem and :last-name are keywords:
+{:fist-name "Charlie"
+ :last-name "McFishwich"}
+
+; Here we associate "string-key" with the + function:
 {"string-key" +}
 
+; Maps can be nested:
+{:name {:first "John" :middle "Jacob" :last "Jing.."}}
+
+; Notice that map values can be of any type-strings, numbers, maps, vectors, even functions.
+; Clojure don't care!
+
+; Besides using map literals, you can use the hash-map funciton to create a map:
 (hash-map :a 1 :b 2)
 
-; I can look uy values in maps with the get function
-(def test-map {:a 0 :b 1})
- 
-(get test-map :b)
-; -> 1
+; You can look up values in maps with the get function:
+(get {:a 0 :b 1} :b)
+; => 1
 
 (get {:a 0 :b {:c "ho hum"}} :b)
-; -> {:c "ho hum"}
+; => {:c "ho hum"}
 
-(get {:a 0 :b {:c "ho hum"}} :c)
+; get will return nil if it doesn't find your key, or you can give it a default
+; value to return, such as "unicorns?" :
+
+(get {:a 0 :b 1} :c)
 ; -> nil
 
-; give the default value
 (get {:a 0 :b 1} :c "unicorns?")
-; -> "unicorns?" 
+; -> unicorns
 
-; look up in nested map
+; The get-in function lets you look up values in nested maps:
 (get-in {:a 0 :b {:c "ho hum"}} [:b :c])
+; -> ho hum
+; :b 키의 값을 찾은 다음 그 결과에서 :c 키의 값을 찾는다.
 
-; Another way to look up a value in a map
-; Treat the map like a function with the key as its argument
+; Another way to look up a value in a map is to treat the map like a funciton with the key
+; as its arguments:
 ({:name "The Human Coffeepot"} :name)
-; -> "The Human Coffepot"
+; -> "The Husman Coffeepot"
+
+; Another cool things you can do with maps is use keywords as funcitons to look up their
+; values, which leads to the next subject, keywords.
 
 
 
 ;; KEYWORDS
-; Keywords can be used as functions
-; that look up the coreesponding value in a data structure
+; Clojure keywords are best understood by seeing how they're used. They're primarily used
+; as keys in maps, as you saw in the preceding section. Here are some more examples of key-
+; words: 
+
+; Kewywords can be used as functions that look up the corresponding value in a data stucture. 
+; For example, you can look up :a in a map:
 ; ex) look up :a in a map
 (:a {:a 1 :b 1 :c 3})
 ; -> 1
@@ -84,66 +279,89 @@ failed-protagonist-names
 
 ; with a default value 
 (:d {:a 1 :b 2 :c 3} "No gnome knows like Noah knows")
-
+; -> No gnome knows like Noah knows
+; Using a keyword as a function is pleasantly succinct, and Real Clojurists do it all the
+; time. You should do it too!
 
 
 ;; VECTORS
 ; A vector is similar to an array, in that it's a 0-indexed collection.
+; For example, here's a vector lieteral:
+[ 3 2 1]
 
-; Returning the 0th element of a vector
+; Here we're returning the 0th element of a vector:
 (get [3 2 1] 0)
+; => 3
 
-; Another example of getting by index
+; nth is slower than get ; Another example of getting by index
 (get ["a" {:name "Pulsley Winterbottom"} "c"] 1)
 ; -> {:name "Pulsley Winterbottom}
 
-; I can create vectors with the vector function
+; You can create vectors with the vector function:
 (vector "creepy" "full" "moon")
 ;-> ["creepy" "full" "moon"]
 
-; I can use the conj function to add additional elements to the vector.
+; You can use the conj function to add additional elements to the vector.
+; Elements are added to the end of a vector:
 (conj [1 2 3] 4)
 ; -> [1 2 3 4]
+; Vectors arent't the only way to store sequences; Clojure also has lists.
 
 
 
 ;; LISTS
-; Lists are similar to vectors in that they're linear collections of values
-; But there are some differences. 
-; I can't retrieve list elements with get.
+; Lists are similar to vectors in that they're linear collections of values.
+; But there are some differences. For exmaple, you can't retrive list elements with get.
+; To write a list literal, just insert the elements into parentheses and use a single quote
+; at the beginning;
  
 '(1 2 3 4)
 ; -> (1 2 3 4)
 
-; For retrieve an element from a list, I can use nth function.
+; Notice that when the REPL prints out the list, it doesn't include the single quote.
+; We'll come back to why that happens later, in Chapter 7. If you want to retrive an
+; element from a list, you can use the nth function:
 (nth '(:a :b :c) 2)
 ; -> :c
-; nth is slower than get 
 
-; List values can have any type, and I can create lists with the list function.
+; I don't cover performance in detail in this book because I dont' think it's useful to
+; focuse on it until after you've become familiar with a language. However, it's good
+; to know that using nth to retrives an element from a list is slower than using get to
+; tretrive an element from a vector. This is because Clojure has to traverse all n
+; elements of a list to get to the nth, whereas it onyl takes a few hops at most to acess
+; a vector element by its index.
+
+
+; List values can have any type, and you can create lists with the list function.
 (list 1 "two" {3 4})
 
 ; Elements are added to the beginning of a list (Not like a vector)
 (conj '(1 2 3)4)
 ;-> (4 1 2 3)
 
-
+; When should you use a list and when should you use a vector? A good rule of thumb is that
+; if you need to easily add items to the beginning of a sequence or if you're wiring a macro,
+; you should use a list. Otherwise , you should use a vector. As you learn more, you'll get
+; a good feel for when to use which.
 
 
 ;; SETS
-; Sets are collections of unique values.
-; Clojure has two kinds of sets: hash sets and sorted sets.
-; I'll focus on hash sets because they're used more often. 
+; Sets are collections of unique values. Clojure has two kinds of sets: hash sets and sorted
+; sets. I'll focus on hash sets because they're used more often. Here's the literal notation
+; for a hash set:
 #{"kurt vonnegut" 20 :icicle}
-
 
 ; Another way to make hash set
 (hash-set 1 1 2 2)
 ; -> #{1 2}
 
+; Note that multiple instances of a value become one unique value in the set, so we're left
+; with a single 1 and a single 2. 
+
 (conj #{:a :b} :b)
 ; -> #{:a :b}
 
+; You can also create sets from existing vectors and lists by using the set function:
 (set [3 3 3 4 4])
 ; -> #{3 4}
 
@@ -170,33 +388,115 @@ failed-protagonist-names
 (get #{:a :b} "kurts")
 ; -> nil
 
+; Simplicity
+; You may have noticed that the treatment of data structures so far doesn't include a desc
+; -ription of how to create new types or classes. The reason is that Clojure's emphasis on
+; simplicity encourages you to reach for the built-in data structure first.
+
+; If you come from an object-oriented background, you might think that this approach is
+; weird and backward. However, what you'll find is that your data does not have to be
+; tightly bundled with a class for it to be useful and intelligible. Here's an epigram
+; loved by Clojurists that hints at the Clojure philosophy:
+
+; It is better to have 100 functions operate on one data structure than
+; 10 functions on 10 data structures. - Alan Perlis
+
+; You will learn more about this aspect of Clojure's philosophy in the coming chapters.
+; For now, keep an eye out for the ways that you gain code reusability by sticking to
+; basic data structures.
+
+; This concludes our Clojure data structures primer. Now it's time to dig in to
+; functions and learn how to use these data structures!
 
 
 ; FUNCTIONS
+; One of the reasons people go nuts over Lisps is that these language let you build
+; programs that behave in complex ways, yet the primary building block-the functions-is
+; so simple. This section initiates you into the beauty and elegance of Lisp functions
+; by explaining the following:
+
+; + Calling functions
+; + How functions differ from macros and special forms
+; + Defining functions
+; + Anonymous functions
+; + Returning functions 
+
+
 ;; CALLING FUNCTIONS
+; By now you've seen many examples of function calls:
 
-; returns the + function 
-; because return value of OR is the first truthy value
+; Remember that all Clojure operations have the same syntax:
+; opening parenthesis, operator, operands, closing parenthesis.
+; Function call is just another term of an operation where the operator is a function
+; or a function expression (an expression that returns a function).
+
+; This lets you write some pretty interesting code.
+; Here's a function expression that returns the + (addition) function:
+
 (or + -)
-
+; => #object[clojure.core$_PLUS_ 0x5dfc0ba0 "clojure.core$_PLUS_@5dfc0ba0"]
+; That return value is the string representation of the addition function.
+; Because the return value of or is the first truthy value, and here the addition function
+; is truthy, the addition function is returned. You can also use this expression as the
+; operator in another exporession:
 ((or + -) 1 2 3)
 ; -> 6
 
-; return value of AND is the first falsey value or the last truthy value
+; Here are a couple more vailid function calls that each return 6:
 ((and (= 1 1) +) 1 2 3)
 ; -> 6
 
 ((first [+ 0]) 1 2 3)
 ; -> 6
 
+; However, these aren't valid funciton calls, because numbers and strings aren't functions:
+(1 2 3 4)
+("test" 1 2 3)
+; -> clojure.lang.Compiler$CompilerException: java.lang.ClassCastException: java.lang.String cannot be cast to clojure.lang.IFn
+; You're likely to see this error many times as you continue with Clojure:<x> cannot be cast
+; to clojure.lang.IFn just means that you're trying to use something as a function when
+; it's not.
+
+; Function flexibility doesn't end with the function expression!
+; Syntactically, functions can take any expression as arguments-including other functions.
+; Functions that can either take a function as an argument or return a function are called
+; higher-order-functions. Programming languages with higher-order-functions are said to
+; support first-class functions because you can treat functions as values in the same way
+; you treat more familiar data types like numbers an vectors. 
+
+; Take the map function (not to be confused with the map data structure), for instance.
+; map creates a new list by applying a function to each member of a collection. Here,
+; the inc function increments a number by 1:
 (inc 1.1)
 
 ; map creates a new list by applying a function to each member of a collection.
 (map inc [0 1 2 3])
 -> (1 2 3 4)
-; Note that map doesn't return a vector, even though we supplied a vector as an argument. 
+; (Note that map doesn't return a vector, even though we supplied a vector as an argument.
+; You'll learn why in Chapter 4. For now, just trust that this is okay and expected.)
 
+; Clojure's support for first-class functions allows you to build more powerful abstractions
+; than you can in languages without them. Those unfamiliar with this kind of programming
+; think of functions as allowing you to generalize operations over data instances.
+; For exmaple, the + function abstracts addition over any specific numbers.
 
+; By contrast, Clojure (and all Lisps) allows you to create functions that generalize over
+; processes. map allows you to generalize the process of transforming a collection by
+; applying a function-any function-over any collection.
+
+; The last detail that you need know about functions calls is that Clojure evaluates all
+; functions arguments recursively before passing them to the function.
+; Here's how Clojure would evaluate a function call whose arguments are also function calls:
+(+ (inc 199) (/ 100 (- 7 2)))
+(+ 200 (/ 100 (- 7 2))) ; evaluated "(inc 199)"
+(+ 200 (/ 100 5)) ; evaluated (- 7 2)
+(+ 200 20) ; evaluated (/ 100 5)
+220 ; final evaluation
+
+; The function call kicks off the evaluation process, and all subforms are evaluated
+; before applying the + function.
+
+; ----------------------------------------------------------------------- 2016.11.14
 
 ;; MACRO CALLS, AND SPECIAL FORMS
 ; special forms example : def, if ...
@@ -221,7 +521,6 @@ failed-protagonist-names
 (defn codger-communication
   [whippersnapper]
   (str "Get off my lawn, " whippersnapper "!!!"))
-
 
 ; Clojure also allows you to define variable-arity functions by including a 
 ; rest parameter, as in "put the rest of these arguments in a list
