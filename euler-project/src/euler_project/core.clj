@@ -623,16 +623,10 @@ ex11-num
        (recur (dec i)
                (*' acc i)))))
 
+(defn split-num [n]
+  (clojure.string/split (str n) #""))
 
-(defn sum-number-char [n]
-  (let [ num-list (clojure.string/split (str n) #"")]
-    
-    )
+(defn sum-each-numbers [n]
+   (reduce + (map read-string (split-num n))))
 
 
-
-(loop [idx 1]
-  (let [ num (tri-num idx)]
-    (if (>= (factor-cnt num) 500)
-      num
-      (recur (inc idx)))))
